@@ -18,8 +18,8 @@ int main(void){
 	TCCR2B = (1<<CS22); // pre
 	TIMSK2= (1<<TOIE2); //hablita interrupção
 	TCNT2 = 5;
-	OCR0A = 0;//PIN 6
-	OCR0B = 255; //PIN 5
+	OCR0A = 255;//PIN 6
+	OCR0B = 0; //PIN 5
 	sei();
 	
 
@@ -33,18 +33,16 @@ ISR(TIMER2_OVF_vect){
 
 	ms1++;
 	TCNT2 = 5;
-	
+	contime++; //variável para contabilizar tempo
 	if(ms1 == 10){
-    contime++;
-		
-    if(contime > 255){
+		if(contime > 255){
+			OCR0A--; //PIN 6
+			OCR0B++; //PIN 5
+			if (contime == 510){contime = 0;}
+		}else{
 			OCR0A--;
 			OCR0B++;
-			if (contime == 510){contime = 0;}
-		}else/*if(contime < 255)*/{
-			OCR0A++;
-			OCR0B--;
-		}
+			}
 		
 		ms1 = 0;
 	}
